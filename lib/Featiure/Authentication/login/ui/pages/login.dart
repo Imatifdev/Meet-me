@@ -99,24 +99,6 @@ class _LoginState extends State<Login> {
               color: Colors.transparent,
             ),
           ),
-          Positioned(
-            bottom: -100,
-            right: -100,
-            child: Image.asset(
-              'assets/images/login.png',
-              width: width,
-              height: height / 1.7,
-            ),
-          ),
-          Positioned(
-            top: -30,
-            left: -30,
-            child: Image.asset(
-              'assets/images/login.png',
-              width: width,
-              height: height / 1.7,
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: SingleChildScrollView(
@@ -131,7 +113,7 @@ class _LoginState extends State<Login> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(
-                        'assets/images/login.png',
+                        'assets/images/logo.png',
                         height: height / 3,
                         width: width,
                       ),
@@ -357,10 +339,7 @@ class ForgotPasswordSheet extends StatelessWidget {
                     ),
                     Center(
                       child: InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                          _showOtpScreen();
-                        },
+                        onTap: () {},
                         child: Container(
                           height: height * 0.07,
                           width: width - 100,
