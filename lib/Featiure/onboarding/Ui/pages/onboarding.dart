@@ -1,287 +1,189 @@
-import 'dart:ui';
+// ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../config/theme/colors.dart';
-import '../../../Authentication/login/ui/pages/login.dart';
 
-class OnboardingScreen extends StatefulWidget {
+class Onboarding extends StatefulWidget {
+  const Onboarding({super.key});
+
   @override
-  _OnboardingScreenState createState() => _OnboardingScreenState();
+  _OnboardingState createState() => _OnboardingState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
-  final PageController _pageController = PageController(initialPage: 0);
-  final List<Widget> _onboardingScreens = [
-    OnboardingPage(
-      subtitle: " SehatGhar World!",
-      title: "Welcome to the",
-      description:
-          "Take a quick tour to see what you can do with SehatGhar App",
-      imagePath: 'assets/images/1.png',
-    ),
-    OnboardingPage(
-      title: "Find Trusted Doctors",
-      subtitle: "",
-      description:
-          "Find doctors and book appointment anywhere anytime according to your need.",
-      imagePath: 'assets/images/2.png',
-    ),
-    OnboardingPage(
-      subtitle: "",
-      title: "Lab Tests",
-      description:
-          "Book Lab tests from Top Labs by Home Sampling or in-lab sample collection service with a single touch.",
-      imagePath: 'assets/images/3.png',
-    ),
-  ];
+class _OnboardingState extends State<Onboarding> {
+  int currentIndex = 0;
+  late PageController _controller;
 
-  int _currentPage = 0;
-
-  void _goToNextPage() {
-    if (_currentPage < _onboardingScreens.length - 1) {
-      setState(() {
-        _currentPage++;
-        _pageController.animateToPage(
-          _currentPage,
-          duration: Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
-        );
-      });
-    }
+  @override
+  void initState() {
+    _controller = PageController(initialPage: 0);
+    super.initState();
   }
 
-  void skip() {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (ctx) => Login()));
-  }
-
-  void _goToPreviousPage() {
-    if (_currentPage > 0) {
-      setState(() {
-        _currentPage--;
-        _pageController.animateToPage(
-          _currentPage,
-          duration: Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
-        );
-      });
-    } else {
-      Navigator.pop(context);
-    }
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
-    final textScaleFactor = MediaQuery.of(context).textScaleFactor;
-
-    final subheading = width * 0.04 * textScaleFactor;
-    final heading = width * 0.07 * textScaleFactor;
-
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Stack(
+      backgroundColor: Colors.lightBlue.shade100,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          PageView.builder(
-            controller: _pageController,
-            itemCount: _onboardingScreens.length,
-            itemBuilder: (context, index) => _onboardingScreens[index],
-          ),
-          Positioned(
-            left: 16.0,
-            right: 16.0,
-            bottom: 80.0,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                //if (_currentPage > 0)
-
-                GestureDetector(
-                  onTap: _currentPage == 3 ? skip : _goToNextPage,
-                  child: Container(
-                    width: width - 80,
-                    height: height * 0.06,
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: AppColors.green,
-                    ),
-                    child: Center(
-                      child: Text(
-                        _currentPage == 0 ? "Getting Started" : "Next",
-                        style: TextStyle(
-                            color: Colors.white, fontSize: subheading),
+          Expanded(
+            child: PageView.builder(
+              controller: _controller,
+              itemCount: contents.length,
+              onPageChanged: (int index) {
+                setState(() {
+                  currentIndex = index;
+                });
+              },
+              itemBuilder: (_, i) {
+                return Padding(
+                  padding: const EdgeInsets.all(35),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        contents[i].image,
+                        height: 300,
                       ),
-                    ),
+                      Text(
+                        contents[i].title,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          textStyle: const TextStyle(
+                            fontSize: 38,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height/6,
+                        width: size.width/1.3,
+                        child: Text(
+                          contents[i].discription,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.raleway(
+                            textStyle: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Color.fromARGB(255, 105, 105, 105),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                );
+              },
             ),
           ),
-          Positioned(
-              left: 16.0,
-              right: 16.0,
-              bottom: 30.0,
-              child: MaterialButton(
-                onPressed: () {
-                  skip();
-                },
-                child: Text(
-                  "Skip",
-                  style: TextStyle(fontSize: subheading),
-                ),
-              )),
-        ],
-      ),
-    );
-  }
-}
-
-class OnboardingPage extends StatelessWidget {
-  int _currentpage = 0;
-  final String title;
-  final String description;
-  final String imagePath;
-  final String subtitle;
-
-  OnboardingPage({
-    required this.subtitle,
-    required this.title,
-    required this.description,
-    required this.imagePath,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
-    final textScaleFactor = MediaQuery.of(context).textScaleFactor;
-
-    final subheading = width * 0.04 * textScaleFactor;
-    final heading = width * 0.07 * textScaleFactor;
-
-    return Container(
-      padding: EdgeInsets.all(0),
-      child: Stack(
-        children: [
-          Positioned(
-            bottom: -100,
-            right: -100,
-            child: ClipOval(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-                child: Container(
-                  width: width / 1.5,
-                  height: height / 3,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        AppColors.blue.withOpacity(0.7),
-                        AppColors.blue.withOpacity(0.3),
-                      ],
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: -90,
-            right: 150,
-            child: ClipOval(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 1.0, sigmaY: 5.0),
-                child: Container(
-                  width: width / 1,
-                  height: height / 2,
-                  color: AppColors.green, // Use transparent color
-                ),
-              ),
-            ),
-          ),
-          // Positioned(
-          //   top: 40,
-          //   left: 10,
-          //   right: 10,
-          //   child: Center(
-          //     child: Image.asset(
-          //       imagePath,
-          //       fit: BoxFit.contain,
-          //       width: width - 30,
-          //       height: height * 0.5,
-          //     ),
-          //   ),
-          // ),
-          // Positioned(
-          //   bottom: _currentpage == 0 ? 280 : 250,
-          //   left: 10,
-          //   right: 10,
-          //   child: Center(
-          //     child: Text(title,
-          //         style: TextStyle(
-          //             fontSize: heading, fontWeight: FontWeight.bold)),
-          //   ),
-          // ),
-          // Positioned(
-          //   bottom: 250,
-          //   left: 10,
-          //   right: 10,
-          //   child: Center(
-          //     child: Text(subtitle,
-          //         style: TextStyle(
-          //             color: AppColors.blue,
-          //             fontSize: heading,
-          //             fontWeight: FontWeight.bold)),
-          //   ),
-          // ),
-          // Positioned(
-          //   bottom: 200,
-          //   left: 10,
-          //   right: 10,
-          //   child: Center(
-          //     child: Text(description,
-          //         textAlign: TextAlign.center,
-          //         style: TextStyle(
-          //           fontSize: subheading,
-          //         ),),
-          //   ),
-          // ),
-          Column(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
-                height: height * 0.05,
+              Container(
+                margin: const EdgeInsets.only(
+                  left: 30,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    contents.length,
+                    (index) => buildDot(index, context),
+                  ),
+                ),
               ),
-              Image.asset(
-                imagePath,
-                fit: BoxFit.contain,
-                width: width - 30,
-                height: height * 0.5,
-              ),
-              SizedBox(
-                height: height * 0.05,
-              ),
-              Text(title,
-                  style: TextStyle(
-                      fontSize: heading, fontWeight: FontWeight.bold)),
-              Text(subtitle,
-                  style: TextStyle(
-                      color: AppColors.blue,
-                      fontSize: heading,
-                      fontWeight: FontWeight.bold)),
-              Text(
-                description,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: subheading,
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color: Theme.of(context).primaryColor,
+                ),
+                height: 53,
+                margin: const EdgeInsets.only(top: 40, bottom: 45, right: 30),
+                width: 53,
+                child: TextButton(
+                  onPressed: () {
+                    if (currentIndex == contents.length - 1) {
+                      // Navigator.pushReplacement(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (_) => const Option(),
+                      //   ),
+                      // );
+                    }
+                    _controller.nextPage(
+                      duration: const Duration(milliseconds: 120),
+                      curve: Curves.bounceIn,
+                    );
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                  child: const Align(
+                    alignment: Alignment(0, 0),
+                    child: Icon(
+                      Icons.arrow_forward_sharp,
+                      size: 30,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );
   }
+
+  Container buildDot(int index, BuildContext context) {
+    return Container(
+      height: 10,
+      width: currentIndex == index ? 25 : 10,
+      margin: const EdgeInsets.only(right: 15),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Theme.of(context).primaryColor,
+      ),
+    );
+  }
 }
+
+
+class UnbordingContent {
+  String image;
+  String title;
+  String discription;
+
+  UnbordingContent(
+      {required this.image, required this.title, required this.discription});
+}
+
+List<UnbordingContent> contents = [
+  UnbordingContent(
+      image: 'assets/images/1.png',
+      title: 'Explore New Connections',
+      discription:
+          "Welcome to our vibrant community of individuals seeking meaningful conversations. Discover and connect with people from all walks of life. Engage in thought-provoking discussions and expand your horizons"),
+  UnbordingContent(
+      image: 'assets/images/2.png',
+      title: 'Unveil Stories, Forge Bonds',
+      discription:
+          "Step into a world where stories unfold with every chat. Join us in creating connections that span cultures, languages, and perspectives. Forge genuine friendships through lively conversations."),
+  UnbordingContent(
+      image: 'assets/images/3.png',
+      title: 'Chat Safely and Securely',
+      discription:
+          "Your safety is our priority. Chat confidently in a secure environment where privacy is respected. Our platform ensures respectful interactions, empowering you to engage with others comfortably."),
+];
