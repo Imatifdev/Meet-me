@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:meetme/Featiure/welcome/UI/screens/welcome_screen.dart';
 
 
 class Onboarding extends StatefulWidget {
@@ -112,12 +113,12 @@ class _OnboardingState extends State<Onboarding> {
                 child: TextButton(
                   onPressed: () {
                     if (currentIndex == contents.length - 1) {
-                      // Navigator.pushReplacement(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (_) => const Option(),
-                      //   ),
-                      // );
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const WelcomeScreen(),
+                        ),
+                      );
                     }
                     _controller.nextPage(
                       duration: const Duration(milliseconds: 120),

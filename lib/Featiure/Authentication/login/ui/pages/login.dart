@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../config/theme/colors.dart';
 
@@ -19,7 +20,7 @@ class _LoginState extends State<Login> {
   void _showForgotPasswordBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (BuildContext context) {
@@ -32,7 +33,7 @@ class _LoginState extends State<Login> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (BuildContext context) {
@@ -45,7 +46,7 @@ class _LoginState extends State<Login> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (BuildContext context) {
@@ -67,8 +68,8 @@ class _LoginState extends State<Login> {
         maxLength: 1,
         textAlign: TextAlign.center,
         keyboardType: TextInputType.number,
-        style: TextStyle(fontSize: 20),
-        decoration: InputDecoration(
+        style: const TextStyle(fontSize: 20),
+        decoration: const InputDecoration(
           counterText: "",
           border: InputBorder.none,
           contentPadding: EdgeInsets.zero,
@@ -82,62 +83,56 @@ class _LoginState extends State<Login> {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final textScaleFactor = MediaQuery.of(context).textScaleFactor;
-    final fontsize = width * 0.04 * textScaleFactor;
-    final fontsize1 = width * 0.05 * textScaleFactor;
+    final fontsize = width * 0.06 * textScaleFactor;
+    final fontsizeSmall = width * 0.04 * textScaleFactor;
     final fontsize2 = width * 0.04 * textScaleFactor;
     final subheading = width * 0.04 * textScaleFactor;
     final heading = width * 0.07 * textScaleFactor;
 
     return Scaffold(
-      body: Stack(
-        children: [
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-            child: Container(
-              width: width,
-              height: height,
-              color: Colors.transparent,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+              child: Container(
+                width: width,
+                height: height,
+                color: Colors.transparent,
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: SingleChildScrollView(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: height * 0.06,
-                  ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        'assets/images/logo.png',
-                        height: height / 3,
-                        width: width,
+                      Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: Image.asset(
+                          'assets/images/logo.png',
+                          height: width / 3,
+                          width: width/3,
+                        ),
                       ),
                       Text(
-                        "Welcome back to",
+                        "Welcome back to Meetly",
                         style: TextStyle(
-                            fontSize: heading, fontWeight: FontWeight.bold),
+                            fontSize: heading-6, fontWeight: FontWeight.bold),
                       ),
-                      Text(
-                        "SehatGhar",
-                        style: TextStyle(
-                            fontSize: fontsize,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.green),
-                      ),
+                      
                     ],
                   ),
                   SizedBox(
                     height: height * 0.020,
                   ),
                   Text(
-                    "SehatGhar! Securely Login & take control of your Health",
+                    "Securely Login & \nStart exploring new people",
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: fontsize),
+                    style: TextStyle(fontSize: fontsizeSmall),
                   ),
                   SizedBox(
                     height: height * 0.020,
@@ -147,7 +142,7 @@ class _LoginState extends State<Login> {
                     decoration: InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
-                      hintText: 'Phone No*',
+                      hintText: 'Email*',
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide(color: Colors.grey.shade200),
@@ -159,7 +154,10 @@ class _LoginState extends State<Login> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your phone number';
+                        return 'Please enter your email';
+                      }
+                      else if( !value.contains("@")){
+                        return "Please enter valid email";
                       }
                       return null;
                     },
@@ -190,14 +188,26 @@ class _LoginState extends State<Login> {
                       return null;
                     },
                   ),
-                  SizedBox(
-                    height: height * 0.02,
+                  TextButton(
+                    onPressed: () {
+                      _showForgotPasswordBottomSheet(context);
+                    },
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        "Forgot Password?",
+                        style: TextStyle(
+                            fontSize: fontsize2-3,
+                            color: Colors.lightBlue.shade900,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
                   Container(
                     height: height * 0.07,
                     width: width - 100,
                     decoration: BoxDecoration(
-                        color: AppColors.green,
+                        color: Colors.lightBlue.shade900,
                         borderRadius: BorderRadius.circular(12)),
                     child: Center(
                       child: Text(
@@ -207,41 +217,70 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 10,),
                   SizedBox(
-                    height: height * 0.03,
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      _showForgotPasswordBottomSheet(context);
-                    },
-                    child: Text(
-                      "Forgot Password",
-                      style: TextStyle(
-                          fontSize: fontsize2,
-                          color: AppColors.green,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
+                    width: width-90,
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Image.asset("assets/images/google-G.png", height: 40, width: 40,),
+                            const Text("Continue with Google")
+                          ],
+                        ),
+                      ),
+                    )),
+                  const SizedBox(height: 10,),
                   SizedBox(
-                    height: height * 0.08,
-                  ),
+                    width: width-90,
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Image.asset("assets/images/fb-F.png", height: 40, width: 40,),
+                            const Text("Continue with Facebook")
+                          ],
+                        ),
+                      ),
+                    )),
+                  const SizedBox(height: 10,),
+                  SizedBox(
+                    width: width-90,
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Image.asset("assets/images/apple.png", height: 40, width: 40,),
+                            const Text("Continue with Apple")
+                          ],
+                        ),
+                      ),
+                    )),
                   RichText(
                     text: TextSpan(
                       children: <TextSpan>[
                         TextSpan(
                           text: 'Don\'t Have an account?',
                           style: TextStyle(
-                            color: AppColors.green,
+                            color: Colors.lightBlue.shade900,
+                            fontFamily: GoogleFonts.poppins().fontFamily,
                             fontWeight: FontWeight.bold,
-                            fontSize: fontsize2,
+                            fontSize: fontsize2-2,
                           ),
                         ),
                         TextSpan(
-                          text: 'Join us',
+                          text: ' Join us',
                           style: TextStyle(
-                            color: AppColors.green,
+                            color: Colors.lightBlue.shade900,
+                            fontFamily: GoogleFonts.poppins().fontFamily,
                             fontWeight: FontWeight.bold,
-                            fontSize: fontsize2,
+                            fontSize: fontsize2-2,
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
@@ -260,8 +299,8 @@ class _LoginState extends State<Login> {
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -288,7 +327,7 @@ class ForgotPasswordSheet extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
               ),
               height: 400,
@@ -300,7 +339,7 @@ class ForgotPasswordSheet extends StatelessWidget {
                     SizedBox(
                       height: height * 0.09,
                     ),
-                    Text(
+                    const Text(
                       "Forgot Password",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -308,7 +347,7 @@ class ForgotPasswordSheet extends StatelessWidget {
                     SizedBox(
                       height: height * 0.03,
                     ),
-                    Text(
+                    const Text(
                         "Enter your Phone No for the verification process, we will send a 4-digit code to your email."),
                     SizedBox(
                       height: height * 0.03,
@@ -334,9 +373,6 @@ class ForgotPasswordSheet extends StatelessWidget {
                         return null;
                       },
                     ),
-                    SizedBox(
-                      height: height * 0.03,
-                    ),
                     Center(
                       child: InkWell(
                         onTap: () {},
@@ -355,9 +391,6 @@ class ForgotPasswordSheet extends StatelessWidget {
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: height * 0.03,
                     ),
                   ],
                 ),
@@ -391,7 +424,7 @@ class OtpSheet extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
               ),
               height: height / 2,
@@ -403,31 +436,31 @@ class OtpSheet extends StatelessWidget {
                     SizedBox(
                       height: height * 0.08,
                     ),
-                    Text(
+                    const Text(
                       "OTP Screen",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
-                    Text("Enter the 4-digit code sent to your email."),
-                    SizedBox(
+                    const Text("Enter the 4-digit code sent to your email."),
+                    const SizedBox(
                       height: 20,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         _buildOtpBox(),
-                        SizedBox(width: 16),
+                        const SizedBox(width: 16),
                         _buildOtpBox(),
-                        SizedBox(width: 16),
+                        const SizedBox(width: 16),
                         _buildOtpBox(),
-                        SizedBox(width: 16),
+                        const SizedBox(width: 16),
                         _buildOtpBox(),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Center(
@@ -484,7 +517,7 @@ class ResetPasswordSheet extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
               ),
               height: height / 1.5,
@@ -496,7 +529,7 @@ class ResetPasswordSheet extends StatelessWidget {
                     SizedBox(
                       height: height * 0.08,
                     ),
-                    Text(
+                    const Text(
                       "Reset Password",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -504,7 +537,7 @@ class ResetPasswordSheet extends StatelessWidget {
                     SizedBox(
                       height: height * 0.03,
                     ),
-                    Text(
+                    const Text(
                         "Set the new password for your account so you can login and access all the features."),
                     SizedBox(
                       height: height * 0.03,
@@ -567,7 +600,7 @@ class ResetPasswordSheet extends StatelessWidget {
                           height: height * 0.07,
                           width: width - 100,
                           decoration: BoxDecoration(
-                              color: AppColors.green,
+                              color: Colors.lightBlue.shade900,
                               borderRadius: BorderRadius.circular(12)),
                           child: Center(
                             child: Text(

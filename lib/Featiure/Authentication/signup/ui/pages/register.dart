@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../../../config/theme/colors.dart';
 import '../../../../home/ui/pages/homepage.dart';
 import '../../../login/ui/pages/login.dart';
@@ -56,24 +57,24 @@ class _RegisterState extends State<Register> {
                 color: Colors.transparent,
               ),
             ),
-            Positioned(
-              bottom: -100,
-              right: -100,
-              child: Image.asset(
-                'assets/images/greygradient.png',
-                width: width,
-                height: height / 1.7,
-              ),
-            ),
-            Positioned(
-              top: -30,
-              left: -30,
-              child: Image.asset(
-                'assets/images/greengradient.png',
-                width: width,
-                height: height / 1.7,
-              ),
-            ),
+            // Positioned(
+            //   bottom: -100,
+            //   right: -100,
+            //   child: Image.asset(
+            //     'assets/images/greygradient.png',
+            //     width: width,
+            //     height: height / 1.7,
+            //   ),
+            // ),
+            // Positioned(
+            //   top: -30,
+            //   left: -30,
+            //   child: Image.asset(
+            //     'assets/images/greengradient.png',
+            //     width: width,
+            //     height: height / 1.7,
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: SingleChildScrollView(
@@ -88,16 +89,16 @@ class _RegisterState extends State<Register> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Join",
+                          "Join ",
                           style: TextStyle(
                               fontSize: heading, fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          "SehatGhar",
+                          "Meetly",
                           style: TextStyle(
                               fontSize: heading,
                               fontWeight: FontWeight.bold,
-                              color: AppColors.green),
+                              color: Colors.lightBlue.shade900),
                         ),
                       ],
                     ),
@@ -105,7 +106,7 @@ class _RegisterState extends State<Register> {
                     SizedBox(
                       width: width - 80,
                       child: Text(
-                        "Today and be part of a community of people who are committed to living healthier lives.",
+                        "Be part of a community of people who are happy to chat and share",
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: fontSize),
                       ),
@@ -159,14 +160,59 @@ class _RegisterState extends State<Register> {
                         ),
                       ),
                     ),
-                    SizedBox(height: height * 0.02),
-                    buildCheckboxAndDropdown(),
+                    
+                    // SizedBox(height: height * 0.02),
+                    // buildCheckboxAndDropdown(),
                     SizedBox(height: height * 0.02),
                     if (_isEmployee)
                       buildTextFormField('Employee ID*', _locationController),
                     SizedBox(height: height * 0.03),
                     buildSignUpButton(subheading),
-                    SizedBox(height: height * 0.02),
+                    const SizedBox(height: 10,),
+                  SizedBox(
+                    width: width-90,
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Image.asset("assets/images/google-G.png", height: 40, width: 40,),
+                            const Text("Continue with Google")
+                          ],
+                        ),
+                      ),
+                    )),
+                  const SizedBox(height: 10,),
+                  SizedBox(
+                    width: width-90,
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Image.asset("assets/images/fb-F.png", height: 40, width: 40,),
+                            const Text("Continue with Facebook")
+                          ],
+                        ),
+                      ),
+                    )),
+                  const SizedBox(height: 10,),
+                  SizedBox(
+                    width: width-90,
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Image.asset("assets/images/apple.png", height: 40, width: 40,),
+                            const Text("Continue with Apple")
+                          ],
+                        ),
+                      ),
+                    )),
                     buildTermsAndConditions(),
                     SizedBox(height: height * 0.07),
                   ],
@@ -227,7 +273,7 @@ class _RegisterState extends State<Register> {
                 });
               },
             ),
-            Text('Are you a corporate employee??'),
+            const Text('Are you a corporate employee??'),
           ],
         ),
         if (_isEmployee)
@@ -273,14 +319,14 @@ class _RegisterState extends State<Register> {
       height: subheading * 3,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColors.green,
+        color: Colors.lightBlue.shade900,
         borderRadius: BorderRadius.circular(12),
       ),
       child: TextButton(
         onPressed: () {
           if (_formKey.currentState!.validate()) {
             Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (ctx) => HomePage()));
+                context, MaterialPageRoute(builder: (ctx) => const HomePage()));
           }
         },
         child: Text(
@@ -302,7 +348,8 @@ class _RegisterState extends State<Register> {
                 style: TextStyle(
                   color: Colors.grey,
                   fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                  fontSize: 16,
+                  fontFamily: GoogleFonts.poppins().fontFamily,
                 ),
               ),
             ],
@@ -311,7 +358,7 @@ class _RegisterState extends State<Register> {
         RichText(
           text: TextSpan(
             children: <TextSpan>[
-              TextSpan(
+              const TextSpan(
                 text: 'to our ',
                 style: TextStyle(
                   color: Colors.grey,
@@ -322,33 +369,36 @@ class _RegisterState extends State<Register> {
               TextSpan(
                 text: 'Terms & Conditions',
                 style: TextStyle(
-                  color: AppColors.blue,
+                  color: Colors.lightBlue.shade900,
                   fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                  fontSize: 16,
+                  fontFamily: GoogleFonts.poppins().fontFamily,
                   decoration: TextDecoration.underline,
                 ),
               ),
             ],
           ),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         RichText(
           text: TextSpan(
             children: <TextSpan>[
               TextSpan(
-                text: 'Have an account?',
+                text: 'Already have an account?',
                 style: TextStyle(
-                  color: AppColors.green,
+                  color: Colors.lightBlue.shade900,
                   fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                  fontSize: 16,
+                  fontFamily: GoogleFonts.poppins().fontFamily,
                 ),
               ),
               TextSpan(
-                text: 'Login',
+                text: ' Login',
                 style: TextStyle(
-                  color: AppColors.green,
+                  color: Colors.lightBlue.shade900,
                   fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                  fontSize: 16,
+                  fontFamily: GoogleFonts.poppins().fontFamily,
                 ),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
