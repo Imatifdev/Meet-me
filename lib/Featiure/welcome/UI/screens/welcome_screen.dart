@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:meetme/Featiure/Authentication/login/ui/pages/login.dart';
-import 'package:meetme/Featiure/Authentication/signup/ui/pages/register.dart';
+import 'package:meetly/Featiure/Authentication/login/ui/pages/login.dart';
+import 'package:meetly/Featiure/Authentication/signup/ui/pages/register.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});

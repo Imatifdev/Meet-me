@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:meetly/Featiure/welcome/UI/screens/welcome_screen.dart';
 
-import '../../onboarding/Ui/pages/onboarding.dart';
 import '../bloc/splacbloc.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -40,7 +40,7 @@ class _SplashScreenState extends State<SplashScreen> {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => const Onboarding(),
+                  builder: (context) => const WelcomeScreen(),
                 ),
               );
             });

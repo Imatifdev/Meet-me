@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:meetme/Featiure/welcome/UI/screens/welcome_screen.dart';
+import 'package:meetly/Featiure/welcome/UI/screens/welcome_screen.dart';
 
 
 class Onboarding extends StatefulWidget {
