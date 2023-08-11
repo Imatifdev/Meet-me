@@ -15,6 +15,8 @@ import '../../../../../config/theme/colors.dart';
 import '../../../signup/ui/pages/register.dart';
 
 class Login extends StatefulWidget {
+  const Login({super.key});
+
   @override
   State<Login> createState() => _LoginState();
 }
@@ -334,7 +336,7 @@ class _LoginState extends State<Login> {
 class ForgotPasswordSheet extends StatelessWidget {
   final TextEditingController _emailController;
 
-  ForgotPasswordSheet(this._emailController);
+  ForgotPasswordSheet(this._emailController, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -431,7 +433,7 @@ class OtpSheet extends StatelessWidget {
   final Function _buildOtpBox;
   final Function _showresetpass;
 
-  OtpSheet(this._buildOtpBox, this._showresetpass);
+  OtpSheet(this._buildOtpBox, this._showresetpass, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -524,7 +526,7 @@ class ResetPasswordSheet extends StatelessWidget {
   final TextEditingController _emailController;
   final Function _showOtpScreen;
 
-  ResetPasswordSheet(this._emailController, this._showOtpScreen);
+  ResetPasswordSheet(this._emailController, this._showOtpScreen, {super.key});
 
   @override
   Widget build(BuildContext context) {
