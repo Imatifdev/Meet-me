@@ -31,10 +31,10 @@
               "client_type": 3
             },
             {
-              "client_id": "209293867042-nafg15skgrq0o3at1h8332l92r17un0f.apps.googleusercontent.com",
+              "client_id": "209293867042-a1bn9koffdje2cb02n9g5kom3nfrf0ra.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.chatapp"
+                "bundle_id": "com.example.meetme"
               }
             }
           ]

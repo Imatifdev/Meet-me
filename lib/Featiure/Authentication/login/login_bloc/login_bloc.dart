@@ -20,6 +20,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(AuthErrorState(e.toString()));
         }
     });
+
+    on<SignUpEvent>((event, emit) async{
+      try {
+      UserCredential authResult = await _auth.createUserWithEmailAndPassword(
+        email: event.email,
+        password: event.password,
+      );
+      emit(AuthLoggedInState(authResult.user!));
+    } catch (e) {
+      emit(AuthErrorState(e.toString()));
+    }
+    });
   }
 
  

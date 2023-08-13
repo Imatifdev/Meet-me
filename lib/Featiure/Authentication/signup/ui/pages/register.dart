@@ -2,7 +2,10 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../../config/theme/colors.dart';
+import 'package:meetly/Featiure/Authentication/login/login_bloc/login_bloc.dart';
+import 'package:meetly/Featiure/Authentication/login/login_bloc/login_event.dart';
+import 'package:meetly/Featiure/Authentication/login/login_bloc/login_states.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../home/ui/pages/homepage.dart';
 import '../../../login/ui/pages/login.dart';
 
@@ -23,7 +26,7 @@ class _RegisterState extends State<Register> {
   ];
 
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _confirmpasswordController =
       TextEditingController();
@@ -45,182 +48,225 @@ class _RegisterState extends State<Register> {
     final heading = width * 0.07 * textScaleFactor;
 
     return Scaffold(
-      body: Form(
-        key: _formKey,
-        child: Stack(
-          children: [
-            BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-              child: Container(
-                width: width,
-                height: height,
-                color: Colors.transparent,
+      body: BlocBuilder<AuthBloc, AuthState>(
+        builder: (context, state) {
+          if(state is AuthLoadingState){
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }else if(state is AuthErrorState) {
+            return Center(child: Text(state.error),);
+          }else if(state is AuthLoggedInState){
+            return const Center(child: Text("You logged In"),);
+          }else {
+            return SafeArea(
+              child: Form(
+              key: _formKey,
+              child: Stack(
+                children: [
+                  BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                    child: Container(
+                      width: width,
+                      height: height,
+                      color: Colors.transparent,
+                    ),
+                  ),
+                  // Positioned(
+                  //   bottom: -100,
+                  //   right: -100,
+                  //   child: Image.asset(
+                  //     'assets/images/greygradient.png',
+                  //     width: width,
+                  //     height: height / 1.7,
+                  //   ),
+                  // ),
+                  // Positioned(
+                  //   top: -30,
+                  //   left: -30,
+                  //   child: Image.asset(
+                  //     'assets/images/greengradient.png',
+                  //     width: width,
+                  //     height: height / 1.7,
+                  //   ),
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: height * 0.09,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Join ",
+                                style: TextStyle(
+                                    fontSize: heading,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "Meetly",
+                                style: TextStyle(
+                                    fontSize: heading,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.lightBlue.shade900),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: height * 0.020),
+                          SizedBox(
+                            width: width - 80,
+                            child: Text(
+                              "Be part of a community of people who are happy to chat and share",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: fontSize),
+                            ),
+                          ),
+                          SizedBox(height: height * 0.020),
+                          buildTextFormField('Full Name*', _nameController),
+                          SizedBox(height: height * 0.02),
+                          buildTextFormField(
+                            'Email*',
+                            _emailController,
+                            keyboardType: TextInputType.emailAddress,
+                          ),
+                          SizedBox(height: height * 0.02),
+                          buildTextFormField('Age', _ageController,
+                              keyboardType: TextInputType.number),
+                          SizedBox(height: height * 0.02),
+                          buildTextFormField(
+                            'Password*',
+                            _passwordController,
+                            obscureText: _obscurePassword,
+                            keyboardType: TextInputType.visiblePassword,
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _obscurePassword = !_obscurePassword;
+                                });
+                              },
+                              icon: Icon(
+                                _obscurePassword
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: height * 0.02),
+                          buildTextFormField(
+                            'Confirm Password*',
+                            _confirmpasswordController,
+                            obscureText: _obscureConfirmPassword,
+                            keyboardType: TextInputType.visiblePassword,
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _obscureConfirmPassword =
+                                      !_obscureConfirmPassword;
+                                });
+                              },
+                              icon: Icon(
+                                _obscureConfirmPassword
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                            ),
+                          ),
+            
+                          // SizedBox(height: height * 0.02),
+                          // buildCheckboxAndDropdown(),
+                          SizedBox(height: height * 0.02),
+                          if (_isEmployee)
+                            buildTextFormField(
+                                'Employee ID*', _locationController),
+                          SizedBox(height: height * 0.03),
+                          buildSignUpButton(
+                            subheading,
+                            "_em","","","",2,
+                            ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          SizedBox(
+                              width: width - 90,
+                              child: Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Image.asset(
+                                        "assets/images/google-G.png",
+                                        height: 40,
+                                        width: 40,
+                                      ),
+                                      const Text("Continue with Google")
+                                    ],
+                                  ),
+                                ),
+                              )),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          SizedBox(
+                              width: width - 90,
+                              child: Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Image.asset(
+                                        "assets/images/fb-F.png",
+                                        height: 40,
+                                        width: 40,
+                                      ),
+                                      const Text("Continue with Facebook")
+                                    ],
+                                  ),
+                                ),
+                              )),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          SizedBox(
+                              width: width - 90,
+                              child: Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Image.asset(
+                                        "assets/images/apple.png",
+                                        height: 40,
+                                        width: 40,
+                                      ),
+                                      const Text("Continue with Apple")
+                                    ],
+                                  ),
+                                ),
+                              )),
+                          buildTermsAndConditions(),
+                          SizedBox(height: height * 0.07),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            // Positioned(
-            //   bottom: -100,
-            //   right: -100,
-            //   child: Image.asset(
-            //     'assets/images/greygradient.png',
-            //     width: width,
-            //     height: height / 1.7,
-            //   ),
-            // ),
-            // Positioned(
-            //   top: -30,
-            //   left: -30,
-            //   child: Image.asset(
-            //     'assets/images/greengradient.png',
-            //     width: width,
-            //     height: height / 1.7,
-            //   ),
-            // ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: height * 0.09,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Join ",
-                          style: TextStyle(
-                              fontSize: heading, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          "Meetly",
-                          style: TextStyle(
-                              fontSize: heading,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.lightBlue.shade900),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: height * 0.020),
-                    SizedBox(
-                      width: width - 80,
-                      child: Text(
-                        "Be part of a community of people who are happy to chat and share",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: fontSize),
                       ),
-                    ),
-                    SizedBox(height: height * 0.020),
-                    buildTextFormField('Full Name*', _nameController),
-                    SizedBox(height: height * 0.02),
-                    buildTextFormField(
-                      'Phone No*',
-                      _phoneController,
-                      keyboardType: TextInputType.phone,
-                    ),
-                    SizedBox(height: height * 0.02),
-                    buildTextFormField('Age', _ageController,
-                        keyboardType: TextInputType.number),
-                    SizedBox(height: height * 0.02),
-                    buildTextFormField(
-                      'Password*',
-                      _passwordController,
-                      obscureText: _obscurePassword,
-                      keyboardType: TextInputType.visiblePassword,
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
-                        icon: Icon(
-                          _obscurePassword
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: height * 0.02),
-                    buildTextFormField(
-                      'Confirm Password*',
-                      _confirmpasswordController,
-                      obscureText: _obscureConfirmPassword,
-                      keyboardType: TextInputType.visiblePassword,
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _obscureConfirmPassword = !_obscureConfirmPassword;
-                          });
-                        },
-                        icon: Icon(
-                          _obscureConfirmPassword
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                        ),
-                      ),
-                    ),
-                    
-                    // SizedBox(height: height * 0.02),
-                    // buildCheckboxAndDropdown(),
-                    SizedBox(height: height * 0.02),
-                    if (_isEmployee)
-                      buildTextFormField('Employee ID*', _locationController),
-                    SizedBox(height: height * 0.03),
-                    buildSignUpButton(subheading),
-                    const SizedBox(height: 10,),
-                  SizedBox(
-                    width: width-90,
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Image.asset("assets/images/google-G.png", height: 40, width: 40,),
-                            const Text("Continue with Google")
-                          ],
-                        ),
-                      ),
-                    )),
-                  const SizedBox(height: 10,),
-                  SizedBox(
-                    width: width-90,
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Image.asset("assets/images/fb-F.png", height: 40, width: 40,),
-                            const Text("Continue with Facebook")
-                          ],
-                        ),
-                      ),
-                    )),
-                  const SizedBox(height: 10,),
-                  SizedBox(
-                    width: width-90,
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Image.asset("assets/images/apple.png", height: 40, width: 40,),
-                            const Text("Continue with Apple")
-                          ],
-                        ),
-                      ),
-                    )),
-                    buildTermsAndConditions(),
-                    SizedBox(height: height * 0.07),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+            );
+          }
+        },
       ),
     );
   }
@@ -251,6 +297,9 @@ class _RegisterState extends State<Register> {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Please enter $labelText';
+        }
+        else if(labelText == "Confirm Password*" && value != _passwordController.text){
+          return "Your password does not match";
         }
         return null;
       },
@@ -314,7 +363,7 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  Container buildSignUpButton(double subheading) {
+  Container buildSignUpButton(double subheading, String email, String password, String fullName, String phoneNumber, int age) {
     return Container(
       height: subheading * 3,
       width: double.infinity,
@@ -325,8 +374,9 @@ class _RegisterState extends State<Register> {
       child: TextButton(
         onPressed: () {
           if (_formKey.currentState!.validate()) {
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (ctx) => const HomePage()));
+           BlocProvider.of<AuthBloc>(context).add(SignUpEvent(email, password, fullName, phoneNumber, age));
+            // Navigator.pushReplacement(
+            //     context, MaterialPageRoute(builder: (ctx) => const HomePage()));
           }
         },
         child: Text(

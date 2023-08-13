@@ -1,11 +1,4 @@
-abstract class AuthEvent {}
-
-class LoginEvent extends AuthEvent {
-  final String email;
-  final String password;
-
-  LoginEvent(this.email, this.password);
-}
+import 'package:meetly/Featiure/Authentication/login/login_bloc/login_event.dart';
 
 class SignUpEvent extends AuthEvent {
   final String email;
@@ -16,5 +9,3 @@ class SignUpEvent extends AuthEvent {
 
   SignUpEvent(this.email, this.password, this.fullName, this.phoneNumber, this.age);
 }
-
-class LogoutEvent extends AuthEvent {}
