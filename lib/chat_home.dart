@@ -179,12 +179,13 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
                                 color: Colors.black),
                           )
                         : Center(
-                            child: Lottie.asset(
-                              'Assets/contact.json',
-                              width: 400,
-                              height: 400,
-                              fit: BoxFit.contain,
-                            ),
+                            child: Text("lottie asset") 
+                            // Lottie.asset(
+                            //   'Assets/contact.json',
+                            //   width: 400,
+                            //   height: 400,
+                            //   fit: BoxFit.contain,
+                            // ),
                           ),
                   ],
                 ),

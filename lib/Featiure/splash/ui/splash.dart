@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:meetly/Featiure/welcome/UI/screens/welcome_screen.dart';
+import 'package:meetly/chat_home.dart';
 
 import '../bloc/splacbloc.dart';
 
@@ -40,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => const WelcomeScreen(),
+                  builder: (context) =>  WelcomeScreen(),
                 ),
               );
             });

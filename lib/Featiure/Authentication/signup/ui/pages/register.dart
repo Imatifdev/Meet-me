@@ -6,6 +6,7 @@ import 'package:meetly/Featiure/Authentication/login/login_bloc/login_bloc.dart'
 import 'package:meetly/Featiure/Authentication/login/login_bloc/login_event.dart';
 import 'package:meetly/Featiure/Authentication/login/login_bloc/login_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meetly/chat_home.dart';
 import '../../../../home/ui/pages/homepage.dart';
 import '../../../login/ui/pages/login.dart';
 
@@ -57,7 +58,9 @@ class _RegisterState extends State<Register> {
           }else if(state is AuthErrorState) {
             return Center(child: Text(state.error),);
           }else if(state is AuthLoggedInState){
-            return const Center(child: Text("You logged In"),);
+            return Center(child: TextButton(child: const Text("You logged In"), onPressed: (){
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChatHome(),));
+            },),);
           }else {
             return SafeArea(
               child: Form(
