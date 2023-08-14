@@ -108,7 +108,8 @@ class ChatRoom extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: InkWell(
-                onTap: () => Get.to(() => ChatHome()),
+                onTap: () => Navigator.push(
+                    context, MaterialPageRoute(builder: (ctx) => ChatHome())),
                 child: Icon(
                   CupertinoIcons.return_icon,
                   size: 30,
@@ -141,10 +142,11 @@ class ChatRoom extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(userMap['name'],
-                        // style: TextStyle(
-                        //     color: CustomTheme.pinkthemecolor, fontSize: 25)
-                            ),
+                    Text(
+                      userMap['name'],
+                      // style: TextStyle(
+                      //     color: CustomTheme.pinkthemecolor, fontSize: 25)
+                    ),
                     Text(
                       snapshot.data!['status'],
                       style: TextStyle(color: Colors.green, fontSize: 15),

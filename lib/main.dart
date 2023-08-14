@@ -7,10 +7,9 @@ import 'package:meetly/firebase_options.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
-  runApp(const MyApp());
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -18,13 +17,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider<AuthBloc>(create: (context) => AuthBloc())
-      ],
+      providers: [BlocProvider<AuthBloc>(create: (context) => AuthBloc())],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Meetly',
-
         theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
             useMaterial3: true,

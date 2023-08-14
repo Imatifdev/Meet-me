@@ -4,15 +4,13 @@ import 'package:flutter/material.dart';
 import 'chat_room.dart';
 
 import 'package:flutter/cupertino.dart';
-import 'package:lottie/lottie.dart';
-import 'package:get/get.dart';
 
 class ChatHome extends StatefulWidget {
   @override
   _ChatHomeState createState() => _ChatHomeState();
 }
 
-class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
+class _ChatHomeState extends State<ChatHome> {
   Map<String, dynamic>? userMap;
   bool isLoading = false;
   final TextEditingController _search = TextEditingController();
@@ -22,7 +20,6 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     setStatus("Online");
   }
 
@@ -30,17 +27,6 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
     await _firestore.collection('users').doc(_auth.currentUser!.uid).update({
       "status": status,
     });
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      // online
-      setStatus("Online");
-    } else {
-      // offline
-      setStatus("Offline");
-    }
   }
 
   String chatRoomId(String user1, String user2) {
@@ -59,17 +45,35 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
       isLoading = true;
     });
 
-    await _firestore
-        .collection('users')
-        .where("name", isEqualTo: _search.text)
-        .get()
-        .then((value) {
+    String searchText = _search.text.trim();
+    if (searchText.isNotEmpty) {
+      try {
+        var querySnapshot = await _firestore
+            .collection('users')
+            .where("name", isEqualTo: searchText)
+            .get();
+
+        setState(() {
+          if (querySnapshot.docs.isNotEmpty) {
+            userMap = querySnapshot.docs[0].data();
+          } else {
+            userMap = null; // User not found
+          }
+          isLoading = false;
+        });
+      } catch (error) {
+        setState(() {
+          userMap = null; // Handle errors
+          isLoading = false;
+        });
+        print("Error searching user: $error");
+      }
+    } else {
       setState(() {
-        userMap = value.docs[0].data();
+        userMap = null; // Clear userMap if search text is empty
         isLoading = false;
       });
-      print(userMap);
-    });
+    }
   }
 
   @override
@@ -126,7 +130,8 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
                           controller: _search,
                           decoration: InputDecoration(
                             suffixIcon: IconButton(
-                                onPressed: onSearch, icon: const Icon(Icons.search)),
+                                onPressed: onSearch,
+                                icon: const Icon(Icons.search)),
                             hintText: "Search...",
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -179,13 +184,7 @@ class _ChatHomeState extends State<ChatHome> with WidgetsBindingObserver {
                                 color: Colors.black),
                           )
                         : Center(
-                            child: Text("lottie asset") 
-                            // Lottie.asset(
-                            //   'Assets/contact.json',
-                            //   width: 400,
-                            //   height: 400,
-                            //   fit: BoxFit.contain,
-                            // ),
+                            child: Text("User not found"),
                           ),
                   ],
                 ),
