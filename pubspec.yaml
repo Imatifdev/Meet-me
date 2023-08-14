@@ -36,6 +36,7 @@ dependencies:
   flutter:
     sdk: flutter
   
+  flutter_facebook_auth: ^6.0.1
   get: ^4.6.5
   google_fonts: ^5.1.0
   google_sign_in: ^6.1.4
