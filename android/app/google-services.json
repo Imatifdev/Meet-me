@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "209293867042-ndhdo7vmf9d9pkb26fd6i5uav5p3bk1s.apps.googleusercontent.com",
+          "client_id": "209293867042-79vsr4vhupa4e7s1nc4d07bf4m8bdl2j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.meetme",
+            "certificate_hash": "3453c5c794cdfde9d20ecaf937176087da4c36fa"
+          }
+        },
+        {
+          "client_id": "209293867042-efei52mavq7d9j0it1igvfuchqlgo60r.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +35,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "209293867042-ndhdo7vmf9d9pkb26fd6i5uav5p3bk1s.apps.googleusercontent.com",
+              "client_id": "209293867042-efei52mavq7d9j0it1igvfuchqlgo60r.apps.googleusercontent.com",
               "client_type": 3
             },
             {
