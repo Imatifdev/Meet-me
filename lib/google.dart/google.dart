@@ -52,11 +52,13 @@ class GoogleAuthWidget extends StatelessWidget {
             }
           }
         },
-        child: Image(
-            fit: BoxFit.cover,
-            height: 60,
-            width: 60,
-            image: AssetImage('assets/images/logo.png')),
+        child: Center(
+          child: Image(
+              fit: BoxFit.cover,
+              height: 60,
+              width: 60,
+              image: AssetImage('assets/images/logo.png')),
+        ),
       ),
     );
   }

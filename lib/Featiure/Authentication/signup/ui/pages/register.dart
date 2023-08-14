@@ -187,7 +187,7 @@ class _RegisterState extends State<Register> {
                           SizedBox(height: height * 0.03),
                           buildSignUpButton(
                             subheading,
-                            "_em","","","",2,
+                            _emailController.text, _passwordController.text ,_nameController.text,"03234436374",2,
                             ),
                           const SizedBox(
                             height: 10,
