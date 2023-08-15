@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:meetly/Featiure/welcome/UI/screens/welcome_screen.dart';
 import 'package:meetly/chat_home.dart';
@@ -41,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) =>  WelcomeScreen(),
+                  builder: (context) =>  FirebaseAuth.instance.currentUser != null? ChatHome(): WelcomeScreen(),
                 ),
               );
             });

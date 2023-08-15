@@ -1,14 +1,19 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:meetly/Featiure/Authentication/login/login_bloc/login_bloc.dart';
 import 'package:meetly/Featiure/splash/ui/splash.dart';
+import 'package:meetly/chat_home.dart';
 import 'package:meetly/firebase_options.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meetly/google.dart/google.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+   await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
 
