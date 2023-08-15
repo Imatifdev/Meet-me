@@ -11,7 +11,7 @@ import 'package:meetly/google.dart/google.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-   await Firebase.initializeApp(
+  await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(MyApp());
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
             useMaterial3: true,
             fontFamily: GoogleFonts.poppins().fontFamily),
-        home: SplashScreen(),
+        home: GoogleAuthWidget(),
       ),
     );
   }
