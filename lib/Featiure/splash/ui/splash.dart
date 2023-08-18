@@ -42,7 +42,10 @@ class _SplashScreenState extends State<SplashScreen> {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) =>  FirebaseAuth.instance.currentUser != null? ChatHome(): WelcomeScreen(),
+                  builder: (context) =>  
+                  //FirebaseAuth.instance.currentUser != null? ChatHome()
+                  //: 
+                  const WelcomeScreen(),
                 ),
               );
             });

@@ -25,6 +25,8 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool isLoading = false;
+  final _formKey = GlobalKey<FormState>();
 
   void _showForgotPasswordBottomSheet(BuildContext context) {
     showModalBottomSheet(
@@ -105,228 +107,248 @@ class _LoginState extends State<Login> {
           } else if (state is AuthErrorState) {
             return Center(child: Text(state.error));
           } else if (state is AuthLoggedInState) {
+          //  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => ChatHome()), (route) => false);
            return Center(child: TextButton(child: const Text("You logged In"), onPressed: (){
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChatHome(),));
             },),);
           }
             return SafeArea(
-          child: Stack(
-            children: [
-              BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-                child: Container(
-                  width: width,
-                  height: height,
-                  color: Colors.transparent,
+          child: SingleChildScrollView(
+            child: Stack(
+              children: [
+                BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                  child: Container(
+                    width: width,
+                    height: height,
+                    color: Colors.transparent,
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          child: Image.asset(
-                            'assets/images/logo.png',
-                            height: width / 3,
-                            width: width/3,
-                          ),
-                        ),
-                        Text(
-                          "Welcome back to Meetly",
-                          style: TextStyle(
-                              fontSize: heading-6, fontWeight: FontWeight.bold),
-                        ),
-                        
-                      ],
-                    ),
-                    SizedBox(
-                      height: height * 0.020,
-                    ),
-                    Text(
-                      "Securely Login & \nStart exploring new people",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: fontsizeSmall),
-                    ),
-                    SizedBox(
-                      height: height * 0.020,
-                    ),
-                    TextFormField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        fillColor: Colors.white,
-                        filled: true,
-                        hintText: 'Email*',
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Colors.grey.shade200),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Colors.grey.shade200),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your email';
-                        }
-                        else if( !value.contains("@")){
-                          return "Please enter valid email";
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(
-                      height: height * 0.02,
-                    ),
-                    TextFormField(
-                      controller: _passwordController,
-                      decoration: InputDecoration(
-                        fillColor: Colors.white,
-                        filled: true,
-                        hintText: 'Password*',
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Colors.grey.shade200),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Colors.grey.shade200),
-                        ),
-                      ),
-                      obscureText: true,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your password';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        _showForgotPasswordBottomSheet(context);
-                      },
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          "Forgot Password?",
-                          style: TextStyle(
-                              fontSize: fontsize2-3,
-                              color: Colors.lightBlue.shade900,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: (){
-                         BlocProvider.of<AuthBloc>(context).add(LoginEvent(
-                      _emailController.text,
-                      _passwordController.text,
-                    ));
-                      },
-                      child: Container(
-                        height: height * 0.07,
-                        width: width - 100,
-                        decoration: BoxDecoration(
-                            color: Colors.lightBlue.shade900,
-                            borderRadius: BorderRadius.circular(12)),
-                        child: Center(
-                          child: Text(
-                            "Login",
-                            style: TextStyle(
-                                color: Colors.white, fontSize: subheading),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10,),
-                    SizedBox(
-                      width: width-90,
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Image.asset("assets/images/google-G.png", height: 40, width: 40,),
-                              const Text("Continue with Google")
-                            ],
-                          ),
-                        ),
-                      )),
-                    const SizedBox(height: 10,),
-                    SizedBox(
-                      width: width-90,
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Image.asset("assets/images/fb-F.png", height: 40, width: 40,),
-                              const Text("Continue with Facebook")
-                            ],
-                          ),
-                        ),
-                      )),
-                    const SizedBox(height: 10,),
-                    SizedBox(
-                      width: width-90,
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Image.asset("assets/images/apple.png", height: 40, width: 40,),
-                              const Text("Continue with Apple")
-                            ],
-                          ),
-                        ),
-                      )),
-                    RichText(
-                      text: TextSpan(
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: 'Don\'t Have an account?',
-                            style: TextStyle(
-                              color: Colors.lightBlue.shade900,
-                              fontFamily: GoogleFonts.poppins().fontFamily,
-                              fontWeight: FontWeight.bold,
-                              fontSize: fontsize2-2,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(3.0),
+                            child: Image.asset(
+                              'assets/images/logo.png',
+                              height: width / 3,
+                              width: width/3,
                             ),
                           ),
-                          TextSpan(
-                            text: ' Join us',
+                          Text(
+                            "Welcome back to Meetly",
                             style: TextStyle(
-                              color: Colors.lightBlue.shade900,
-                              fontFamily: GoogleFonts.poppins().fontFamily,
-                              fontWeight: FontWeight.bold,
-                              fontSize: fontsize2-2,
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (ctx) => Register()));
-                              },
+                                fontSize: heading-6, fontWeight: FontWeight.bold),
                           ),
+                          
                         ],
                       ),
-                    ),
-                    SizedBox(
-                      height: height * 0.07,
-                    ),
-                  ],
+                      SizedBox(
+                        height: height * 0.020,
+                      ),
+                      Text(
+                        "Securely Login & \nStart exploring new people",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: fontsizeSmall),
+                      ),
+                      SizedBox(
+                        height: height * 0.020,
+                      ),
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              controller: _emailController,
+                              decoration: InputDecoration(
+                                fillColor: Colors.white,
+                                filled: true,
+                                hintText: 'Email*',
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Colors.grey.shade200),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Colors.grey.shade200),
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your email';
+                                }
+                                else if( !value.contains("@")){
+                                  return "Please enter valid email";
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(
+                        height: height * 0.02,
+                      ),
+                      TextFormField(
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          hintText: 'Password*',
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: Colors.grey.shade200),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: Colors.grey.shade200),
+                          ),
+                        ),
+                        obscureText: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your password';
+                          }
+                          return null;
+                        },
+                      ),
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          _showForgotPasswordBottomSheet(context);
+                        },
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            "Forgot Password?",
+                            style: TextStyle(
+                                fontSize: fontsize2-3,
+                                color: Colors.lightBlue.shade900,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: (){
+                          if(_formKey.currentState!.validate()){
+                            setState(() {
+                            isLoading = true;
+                          });
+                           BlocProvider.of<AuthBloc>(context).add(LoginEvent(
+                        _emailController.text,
+                        _passwordController.text,
+                      ));
+                      setState(() {
+                        isLoading = false;
+                      });
+                          }
+                        },
+                        child: Container(
+                          height: height * 0.07,
+                          width: width - 100,
+                          decoration: BoxDecoration(
+                              color: Colors.lightBlue.shade900,
+                              borderRadius: BorderRadius.circular(12)),
+                          child: Center(
+                            child: 
+                            isLoading? const CircularProgressIndicator(color: Colors.white) :
+                            Text(
+                              "Login",
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: subheading),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10,),
+                      SizedBox(
+                        width: width-90,
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Image.asset("assets/images/google-G.png", height: 40, width: 40,),
+                                const Text("Continue with Google")
+                              ],
+                            ),
+                          ),
+                        )),
+                      const SizedBox(height: 10,),
+                      SizedBox(
+                        width: width-90,
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Image.asset("assets/images/fb-F.png", height: 40, width: 40,),
+                                const Text("Continue with Facebook")
+                              ],
+                            ),
+                          ),
+                        )),
+                      const SizedBox(height: 10,),
+                      SizedBox(
+                        width: width-90,
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Image.asset("assets/images/apple.png", height: 40, width: 40,),
+                                const Text("Continue with Apple")
+                              ],
+                            ),
+                          ),
+                        )),
+                      RichText(
+                        text: TextSpan(
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: 'Don\'t Have an account?',
+                              style: TextStyle(
+                                color: Colors.lightBlue.shade900,
+                                fontFamily: GoogleFonts.poppins().fontFamily,
+                                fontWeight: FontWeight.bold,
+                                fontSize: fontsize2-2,
+                              ),
+                            ),
+                            TextSpan(
+                              text: ' Join us',
+                              style: TextStyle(
+                                color: Colors.lightBlue.shade900,
+                                fontFamily: GoogleFonts.poppins().fontFamily,
+                                fontWeight: FontWeight.bold,
+                                fontSize: fontsize2-2,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (ctx) => Register()));
+                                },
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: height * 0.07,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
           }

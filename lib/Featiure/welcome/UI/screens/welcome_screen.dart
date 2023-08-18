@@ -42,7 +42,7 @@ class WelcomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 90, vertical: 25),
                   ),
                   onPressed: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => Login(),));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Login(),));
                   }, child: const Text("Signin"))
               ],
             ),

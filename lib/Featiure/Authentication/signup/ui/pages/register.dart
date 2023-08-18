@@ -58,6 +58,7 @@ class _RegisterState extends State<Register> {
           }else if(state is AuthErrorState) {
             return Center(child: Text(state.error),);
           }else if(state is AuthLoggedInState){
+           // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => ChatHome()), (route) => false);
             return Center(child: TextButton(child: const Text("You logged In"), onPressed: (){
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChatHome(),));
             },),);
