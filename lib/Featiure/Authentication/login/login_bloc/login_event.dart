@@ -1,3 +1,5 @@
+import 'dart:io';
+
 abstract class AuthEvent {}
 
 class LoginEvent extends AuthEvent {
@@ -11,10 +13,11 @@ class SignUpEvent extends AuthEvent {
   final String email;
   final String password;
   final String fullName;
-  final String phoneNumber;
-  final int age;
+  final String age;
+  final File profilePicture; // Add this property for the profile picture
 
-  SignUpEvent(this.email, this.password, this.fullName, this.phoneNumber, this.age);
+  SignUpEvent(
+      this.email, this.password, this.fullName, this.age, this.profilePicture);
 }
 
 class LogoutEvent extends AuthEvent {}

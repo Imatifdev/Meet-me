@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'chat_room.dart';
-
 import 'package:flutter/cupertino.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
+import 'chat_room.dart';
 
 class ChatHome extends StatefulWidget {
   @override
@@ -16,11 +17,13 @@ class _ChatHomeState extends State<ChatHome> {
   final TextEditingController _search = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  List<Map<String, dynamic>> allUsers = [];
 
   @override
   void initState() {
     super.initState();
     setStatus("Online");
+    fetchAllUsers();
   }
 
   void setStatus(String status) async {
@@ -35,6 +38,30 @@ class _ChatHomeState extends State<ChatHome> {
       return "$user1$user2";
     } else {
       return "$user2$user1";
+    }
+  }
+
+  Future<void> fetchAllUsers() async {
+    try {
+      var querySnapshot = await _firestore.collection('users').get();
+      setState(() {
+        allUsers = querySnapshot.docs.map((doc) {
+          Map<String, dynamic> userData = doc.data();
+          userData['uid'] = doc.id;
+          return userData;
+        }).toList();
+      });
+
+      for (var user in allUsers) {
+        if (user.containsKey('profilePictures')) {
+          String downloadURL = await FirebaseStorage.instance
+              .ref(user['profilePictures'])
+              .getDownloadURL();
+          user['profilePictureURL'] = downloadURL;
+        }
+      }
+    } catch (error) {
+      print("Error fetching users: $error");
     }
   }
 
@@ -57,20 +84,20 @@ class _ChatHomeState extends State<ChatHome> {
           if (querySnapshot.docs.isNotEmpty) {
             userMap = querySnapshot.docs[0].data();
           } else {
-            userMap = null; // User not found
+            userMap = null;
           }
           isLoading = false;
         });
       } catch (error) {
         setState(() {
-          userMap = null; // Handle errors
+          userMap = null;
           isLoading = false;
         });
         print("Error searching user: $error");
       }
     } else {
       setState(() {
-        userMap = null; // Clear userMap if search text is empty
+        userMap = null;
         isLoading = false;
       });
     }
@@ -106,18 +133,15 @@ class _ChatHomeState extends State<ChatHome> {
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      height: size.height / 10,
-                    ),
+                    SizedBox(height: size.height / 10),
                     InkWell(
-                        onTap: () => Navigator.pop(context),
-                        child: const Icon(
-                          CupertinoIcons.left_chevron,
-                          size: 40,
-                        )),
-                    SizedBox(
-                      height: size.height / 20,
+                      onTap: () => Navigator.pop(context),
+                      child: const Icon(
+                        CupertinoIcons.left_chevron,
+                        size: 40,
+                      ),
                     ),
+                    SizedBox(height: size.height / 20),
                     Container(
                       height: size.height / 14,
                       width: size.width,
@@ -130,8 +154,9 @@ class _ChatHomeState extends State<ChatHome> {
                           controller: _search,
                           decoration: InputDecoration(
                             suffixIcon: IconButton(
-                                onPressed: onSearch,
-                                icon: const Icon(Icons.search)),
+                              onPressed: onSearch,
+                              icon: const Icon(Icons.search),
+                            ),
                             hintText: "Search...",
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -140,18 +165,15 @@ class _ChatHomeState extends State<ChatHome> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: size.height / 50,
-                    ),
-                    SizedBox(
-                      height: size.height / 30,
-                    ),
+                    SizedBox(height: size.height / 50),
+                    SizedBox(height: size.height / 30),
                     userMap != null
                         ? ListTile(
                             onTap: () {
                               String roomId = chatRoomId(
-                                  _auth.currentUser!.displayName!,
-                                  userMap!['name']);
+                                _auth.currentUser!.displayName!,
+                                userMap!['name'],
+                              );
 
                               Navigator.of(context).push(
                                 MaterialPageRoute(
@@ -163,14 +185,24 @@ class _ChatHomeState extends State<ChatHome> {
                               );
                             },
                             leading: Container(
-                                height: 50,
-                                width: 50,
-                                decoration: BoxDecoration(
-                                    color: Colors.grey.shade200,
-                                    borderRadius: BorderRadius.circular(100),
-                                    border: Border.all(width: 1)),
-                                child: const Icon(CupertinoIcons.person_2,
-                                    color: Colors.black)),
+                              height: 50,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade200,
+                                borderRadius: BorderRadius.circular(100),
+                                border: Border.all(width: 1),
+                              ),
+                              child: userMap!['profilePictureUrl'] != null
+                                  ? CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                        userMap!['profilePictureUrl'],
+                                      ),
+                                    )
+                                  : const Icon(
+                                      CupertinoIcons.person_2,
+                                      color: Colors.black,
+                                    ),
+                            ),
                             title: Text(
                               userMap!['name'],
                               style: const TextStyle(
@@ -180,12 +212,70 @@ class _ChatHomeState extends State<ChatHome> {
                               ),
                             ),
                             subtitle: Text(userMap!['email']),
-                            trailing: const Icon(Icons.mobile_friendly,
-                                color: Colors.black),
+                            trailing: const Icon(
+                              Icons.mobile_friendly,
+                              color: Colors.black,
+                            ),
                           )
                         : Center(
                             child: Text("User not found"),
                           ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: allUsers.length,
+                      itemBuilder: (context, index) {
+                        Map<String, dynamic> userData = allUsers[index];
+                        return ListTile(
+                          onTap: () {
+                            String roomId = chatRoomId(
+                              _auth.currentUser!.displayName!,
+                              userData['name'],
+                            );
+
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => ChatRoom(
+                                  chatRoomId: roomId,
+                                  userMap: userData,
+                                ),
+                              ),
+                            );
+                          },
+                          leading: Container(
+                            height: 50,
+                            width: 50,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(100),
+                              border: Border.all(width: 1),
+                            ),
+                            child: userData.containsKey('profilePictureURL')
+                                ? CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                      userData['profilePictureURL'],
+                                    ),
+                                  )
+                                : const Icon(
+                                    CupertinoIcons.person_2,
+                                    color: Colors.black,
+                                  ),
+                          ),
+                          title: Text(
+                            userData['name'],
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          subtitle: Text(userData['email']),
+                          trailing: const Icon(
+                            Icons.mobile_friendly,
+                            color: Colors.black,
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 ),
         ),
