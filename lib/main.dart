@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:meetly/Featiure/Authentication/login/login_bloc/login_bloc.dart';
 import 'package:meetly/Featiure/Authentication/signup/ui/pages/register.dart';
+import 'package:meetly/Featiure/admin/ui/add_fake_user_screen.dart';
 import 'package:meetly/Featiure/admin/ui/admin_dashboard.dart';
 import 'package:meetly/Featiure/splash/ui/splash.dart';
 import 'package:meetly/chat_home.dart';
@@ -14,7 +15,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp()); 
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
