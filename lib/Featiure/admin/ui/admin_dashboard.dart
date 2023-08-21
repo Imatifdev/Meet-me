@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meetly/Featiure/admin/ui/add_fake_user_screen.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -55,7 +56,9 @@ class UsersTab extends StatelessWidget {
             padding: EdgeInsets.all(8.0),
             child: Text("Total Users: 10", style: TextStyle(fontSize: 18, ),),
           ),
-          IconButton(onPressed: (){}, icon: const Icon(Icons.add_box_rounded, size: 40,))
+          IconButton(onPressed: (){
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AddFakeUserScreen(),));
+          }, icon: const Icon(Icons.add_box_rounded, size: 40,))
         ],),
         Expanded(
           child: GridView.builder(
