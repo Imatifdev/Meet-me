@@ -21,20 +21,24 @@ class AddFakeUserScreenState extends State<AddFakeUserScreen> {
   String imgUrl = '';
 
   final ImagePicker _imagePicker = ImagePicker();
-  late File _pickedFile;
+  File? _pickedFile;
+  String name = "";
 
   Future<void> _getImage() async {
-    final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery);
+    final pickedFile =
+        await _imagePicker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
-        _pickedFile = File(pickedFile.path) ;
+        _pickedFile = File(pickedFile.path);
+        name = _pickedFile!.path;
       });
     }
   }
 
   Future<void> _uploadImage() async {
-    final Reference ref = FirebaseStorage.instance.ref().child('images/${DateTime.now()}.png');
-    final UploadTask uploadTask = ref.putFile(File(_pickedFile.path));
+    final Reference ref =
+        FirebaseStorage.instance.ref().child('images/${DateTime.now()}.png');
+    final UploadTask uploadTask = ref.putFile(File(_pickedFile!.path));
 
     await uploadTask.whenComplete(() {
       ref.getDownloadURL().then((value) {
@@ -60,22 +64,22 @@ class AddFakeUserScreenState extends State<AddFakeUserScreen> {
               TextFormField(
                 controller: firstName,
                 decoration: const InputDecoration(labelText: 'First Name'),
-                validator: (value){
-                  if(value!.isEmpty){
+                validator: (value) {
+                  if (value!.isEmpty) {
                     return "Please enter value";
-                  }else{
-                    return"";
+                  } else {
+                    return "";
                   }
                 },
               ),
               TextFormField(
                 controller: lastName,
                 decoration: const InputDecoration(labelText: 'Last Name'),
-                validator:  (value){
-                  if(value!.isEmpty){
+                validator: (value) {
+                  if (value!.isEmpty) {
                     return "Please enter value";
-                  }else{
-                    return"";
+                  } else {
+                    return "";
                   }
                 },
               ),
@@ -83,19 +87,21 @@ class AddFakeUserScreenState extends State<AddFakeUserScreen> {
                 controller: age,
                 decoration: const InputDecoration(labelText: 'Age'),
                 keyboardType: TextInputType.number,
-                validator: (value){
-                  if(value!.isEmpty){
+                validator: (value) {
+                  if (value!.isEmpty) {
                     return "Please enter value";
-                  }else{
-                    return"";
+                  } else {
+                    return "";
                   }
                 },
               ),
-              Switch(value: status, onChanged: (value){
-                setState(() {
-                  status = !status;
-                });
-              } ),
+              Switch(
+                  value: status,
+                  onChanged: (value) {
+                    setState(() {
+                      status = !status;
+                    });
+                  }),
               Row(
                 children: [
                   ElevatedButton(
@@ -104,7 +110,7 @@ class AddFakeUserScreenState extends State<AddFakeUserScreen> {
                     },
                     child: const Text('Pick Image'),
                   ),
-                  Expanded(child: Text(_pickedFile.path))
+                  Expanded(child: Text(name))
                 ],
               ),
               ElevatedButton(
