@@ -1,5 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:meetly/Featiure/admin/ui/add_fake_user_screen.dart';
+import 'package:meetly/Featiure/mobile%20ads/ads.dart';
+import 'package:facebook_audience_network/facebook_audience_network.dart';
+
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -17,9 +23,11 @@ class AdminDashboardState extends State<AdminDashboard> with SingleTickerProvide
 
   @override
   void initState() {
+    
     controller = TabController(length: 2, vsync: this);
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +50,71 @@ class AdminDashboardState extends State<AdminDashboard> with SingleTickerProvide
   }
 }
 
-class UsersTab extends StatelessWidget {
+class UsersTab extends StatefulWidget {
   const UsersTab({super.key});
+
+  @override
+  State<UsersTab> createState() => _UsersTabState();
+}
+
+class _UsersTabState extends State<UsersTab> {
+    BannerAd? _bannerAd;
+
+    @override
+  void initState() {
+    BannerAd(
+    adUnitId: AdHelper.bannerAdUnitId,
+    request: const AdRequest(),
+    size: AdSize.banner,
+    listener: BannerAdListener(
+      onAdLoaded: (ad) {
+        setState(() {
+          _bannerAd = ad as BannerAd;
+        });
+      },
+      onAdFailedToLoad: (ad, err) {
+        print('Failed to load a banner ad: ${err.message}');
+        ad.dispose();
+      },
+    ),
+  ).load();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
+         if (_bannerAd != null)
+            SizedBox(
+              //width:MediaQuery.of(context).size.width,
+              height: _bannerAd!.size.height.toDouble(),
+              child: AdWidget(ad: _bannerAd!),
+            ),
+            
+            Container(
+  alignment: Alignment(0.5, 1),
+  child: FacebookBannerAd(
+    placementId: Platform.isAndroid ? "YOUR_ANDROID_PLACEMENT_ID" : "1698061277334331_1698061574000968",
+    bannerSize: BannerSize.STANDARD,
+    listener: (result, value) {
+      switch (result) {
+        case BannerAdResult.ERROR:
+          print("Error: $value");
+          break;
+        case BannerAdResult.LOADED:
+          print("Loaded: $value");
+          break;
+        case BannerAdResult.CLICKED:
+          print("Clicked: $value");
+          break;
+        case BannerAdResult.LOGGING_IMPRESSION:
+          print("Logging Impression: $value");
+          break;
+      }
+    },
+  ),
+),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
