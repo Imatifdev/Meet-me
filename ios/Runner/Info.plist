@@ -41,6 +41,8 @@
 			<!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
 			<string>com.googleusercontent.apps.861823949799-vc35cprkp249096uujjn0vvnmcvjppkn</string>
 		</array>
+		<key>GADApplicationIdentifier</key>
+    <string>ca-app-pub-3940256099942544~1458002511</string>
 	</dict> 
    </array>
 <!-- End of the Google Sign-In section -->
