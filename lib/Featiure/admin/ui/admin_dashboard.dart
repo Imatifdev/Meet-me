@@ -59,14 +59,26 @@ class UsersTab extends StatefulWidget {
 
 class _UsersTabState extends State<UsersTab> {
     BannerAd? _bannerAd;
+    //fb ad
+    Widget _currentAd = SizedBox(
+    width: 0.0,
+    height: 0.0,
+  );
 
     @override
   void initState() {
+  //   FacebookAudienceNetwork.init(
+  //   testingId: "c4b5f429-5e2f-487b-8fe1-430d4f209b99",
+  // );
+    FacebookAudienceNetwork.init(
+        testingId: "aa3ba621-b601-4f89-9a01-d4e36cfe43eb"); 
+    _showBannerAd();
     BannerAd(
     adUnitId: AdHelper.bannerAdUnitId,
     request: const AdRequest(),
     size: AdSize.banner,
     listener: BannerAdListener(
+      
       onAdLoaded: (ad) {
         setState(() {
           _bannerAd = ad as BannerAd;
@@ -81,6 +93,21 @@ class _UsersTabState extends State<UsersTab> {
     super.initState();
   }
 
+  //fb
+  _showBannerAd() {
+    setState(() {
+      _currentAd = FacebookBannerAd(
+        // placementId: "YOUR_PLACEMENT_ID",
+        placementId: "3547050492249770_3547050788916407", //testid
+        //size of banner ad
+        bannerSize: BannerSize.STANDARD,
+        listener: (result, value) {
+          print("Banner Ad: $result -->  $value");
+        },
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -91,30 +118,28 @@ class _UsersTabState extends State<UsersTab> {
               height: _bannerAd!.size.height.toDouble(),
               child: AdWidget(ad: _bannerAd!),
             ),
+            SizedBox(height: 10,),
             
-            Container(
-  alignment: Alignment(0.5, 1),
-  child: FacebookBannerAd(
-    placementId: Platform.isAndroid ? "YOUR_ANDROID_PLACEMENT_ID" : "1698061277334331_1698061574000968",
-    bannerSize: BannerSize.STANDARD,
-    listener: (result, value) {
-      switch (result) {
-        case BannerAdResult.ERROR:
-          print("Error: $value");
-          break;
-        case BannerAdResult.LOADED:
-          print("Loaded: $value");
-          break;
-        case BannerAdResult.CLICKED:
-          print("Clicked: $value");
-          break;
-        case BannerAdResult.LOGGING_IMPRESSION:
-          print("Logging Impression: $value");
-          break;
-      }
-    },
-  ),
-),
+            FacebookBannerAd(
+              placementId: Platform.isAndroid ? "3547050492249770_3547050788916407" : "1698061277334331_1698061574000968",
+              bannerSize: BannerSize.STANDARD,
+              listener: (result, value) {
+                switch (result) {
+                  case BannerAdResult.ERROR:
+                    print("Error: $value");
+                    break;
+                  case BannerAdResult.LOADED:
+                    print("Loaded: $value");
+                    break;
+                  case BannerAdResult.CLICKED:
+                    print("Clicked: $value");
+                    break;
+                  case BannerAdResult.LOGGING_IMPRESSION:
+                    print("Logging Impression: $value");
+                    break;
+                }
+              },
+            ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -127,6 +152,8 @@ class _UsersTabState extends State<UsersTab> {
           }, icon: const Icon(Icons.add_box_rounded, size: 40,))
         ],),
         Expanded(
+         // height:400,
+         flex: 6,
           child: GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
@@ -177,6 +204,14 @@ class _UsersTabState extends State<UsersTab> {
                   ),
                 ),
               )), ),
+        ),
+        Flexible(
+          fit: FlexFit.tight,
+          flex: 1,
+          child: Align(
+            alignment: const Alignment(0, 1.0),
+            child: _currentAd,
+          ),
         )
       ],
     );

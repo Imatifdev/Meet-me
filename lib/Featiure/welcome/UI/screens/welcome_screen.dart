@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meetly/Featiure/Authentication/login/ui/pages/login.dart';
 import 'package:meetly/Featiure/Authentication/signup/ui/pages/register.dart';
+import 'package:meetly/Featiure/admin/ui/admin_login.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -43,7 +44,10 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                   onPressed: (){
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Login(),));
-                  }, child: const Text("Signin"))
+                  }, child: const Text("Signin")),
+                  TextButton(onPressed: (){
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => AdminLoginScreen(),));
+                  }, child: const Text("Admin Panel"))
               ],
             ),
             

@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:meetly/Featiure/Authentication/login/login_bloc/login_bloc.dart';
 import 'package:meetly/Featiure/admin/ui/admin_dashboard.dart';
 import 'package:facebook_audience_network/facebook_audience_network.dart';
+import 'package:meetly/Featiure/splash/ui/splash.dart';
 import 'package:meetly/firebase_options.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,9 +15,11 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   MobileAds.instance.initialize();
-  FacebookAudienceNetwork.init(
-    testingId: "c4b5f429-5e2f-487b-8fe1-430d4f209b99"
+  
+  RequestConfiguration requestConfiguration = RequestConfiguration(
+    testDeviceIds: ["DD7BB1557CF7EA7AA9900A3BCA535D66"]
   );
+  MobileAds.instance.updateRequestConfiguration(requestConfiguration);
   runApp(const MyApp()); 
 }
 
@@ -33,7 +36,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
             useMaterial3: true,
             fontFamily: GoogleFonts.poppins().fontFamily),
-        home: AdminDashboard(),
+        home: SplashScreen(),
       ),
     );
   }
