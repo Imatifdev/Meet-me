@@ -133,14 +133,14 @@ class _ChatHomeState extends State<ChatHome> {
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: size.height / 10),
-                    InkWell(
-                      onTap: () => Navigator.pop(context),
-                      child: const Icon(
-                        CupertinoIcons.left_chevron,
-                        size: 40,
-                      ),
-                    ),
+                    // SizedBox(height: size.height / 10),
+                    // InkWell(
+                    //   onTap: () => Navigator.pop(context),
+                    //   child: const Icon(
+                    //     CupertinoIcons.left_chevron,
+                    //     size: 40,
+                    //   ),
+                    // ),
                     SizedBox(height: size.height / 20),
                     Container(
                       height: size.height / 14,
@@ -165,61 +165,62 @@ class _ChatHomeState extends State<ChatHome> {
                         ),
                       ),
                     ),
-                    SizedBox(height: size.height / 50),
-                    SizedBox(height: size.height / 30),
-                    userMap != null
-                        ? ListTile(
-                            onTap: () {
-                              String roomId = chatRoomId(
-                                _auth.currentUser!.displayName!,
-                                userMap!['name'],
-                              );
+                   // SizedBox(height: size.height / 50),
+                    //SizedBox(height: size.height / 30),
+                    // userMap != null
+                    //     ? ListTile(
+                    //         onTap: () {
+                    //           String roomId = chatRoomId(
+                    //             _auth.currentUser!.displayName!,
+                    //             userMap!['name'],
+                    //           );
 
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => ChatRoom(
-                                    chatRoomId: roomId,
-                                    userMap: userMap!,
-                                  ),
-                                ),
-                              );
-                            },
-                            leading: Container(
-                              height: 50,
-                              width: 50,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(100),
-                                border: Border.all(width: 1),
-                              ),
-                              child: userMap!['profilePictureUrl'] != null
-                                  ? CircleAvatar(
-                                      backgroundImage: NetworkImage(
-                                        userMap!['profilePictureUrl'],
-                                      ),
-                                    )
-                                  : const Icon(
-                                      CupertinoIcons.person_2,
-                                      color: Colors.black,
-                                    ),
-                            ),
-                            title: Text(
-                              userMap!['name'],
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 17,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            subtitle: Text(userMap!['email']),
-                            trailing: const Icon(
-                              Icons.mobile_friendly,
-                              color: Colors.black,
-                            ),
-                          )
-                        : Center(
-                            child: Text("User not found"),
-                          ),
+                    //           Navigator.of(context).push(
+                    //             MaterialPageRoute(
+                    //               builder: (_) => ChatRoom(
+                    //                 chatRoomId: roomId,
+                    //                 userMap: userMap!,
+                    //               ),
+                    //             ),
+                    //           );
+                    //         },
+                    //         leading: Container(
+                    //           height: 50,
+                    //           width: 50,
+                    //           decoration: BoxDecoration(
+                    //             color: Colors.grey.shade200,
+                    //             borderRadius: BorderRadius.circular(100),
+                    //             border: Border.all(width: 1),
+                    //           ),
+                    //           child: userMap!['profilePictureUrl'] != null
+                    //               ? CircleAvatar(
+                    //                   backgroundImage: NetworkImage(
+                    //                     userMap!['profilePictureUrl'],
+                    //                   ),
+                    //                 )
+                    //               : const Icon(
+                    //                   CupertinoIcons.person_2,
+                    //                   color: Colors.black,
+                    //                 ),
+                    //         ),
+                    //         title: Text(
+                    //           userMap!['name'],
+                    //           style: const TextStyle(
+                    //             color: Colors.black,
+                    //             fontSize: 17,
+                    //             fontWeight: FontWeight.w500,
+                    //           ),
+                    //         ),
+                    //         subtitle: Text(userMap!['email']),
+                    //         trailing: const Icon(
+                    //           Icons.mobile_friendly,
+                    //           color: Colors.black,
+                    //         ),
+                    //       )
+                    //     : Center(
+                    //         child: Text("User not found"),
+                    //       ),
+                    allUsers.isNotEmpty?
                     ListView.builder(
                       shrinkWrap: true,
                       itemCount: allUsers.length,
@@ -275,7 +276,7 @@ class _ChatHomeState extends State<ChatHome> {
                           ),
                         );
                       },
-                    ),
+                    ): Center(child: const CircularProgressIndicator()),
                   ],
                 ),
         ),

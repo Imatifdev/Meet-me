@@ -67,7 +67,7 @@ class _RegisterState extends State<Register> {
             // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => ChatHome()), (route) => false);
             return Center(
               child: TextButton(
-                child: const Text("You logged In"),
+                child: const Text("You logged In. Click here to move forward"),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => ChatHome(),

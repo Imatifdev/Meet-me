@@ -8,75 +8,89 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meetly/chat_home.dart';
 import 'package:uuid/uuid.dart';
-
 import 'package:get/get.dart';
 
-class ChatRoom extends StatelessWidget {
+class ChatRoom extends StatefulWidget {
   final Map<String, dynamic> userMap;
   final String chatRoomId;
 
   ChatRoom({required this.chatRoomId, required this.userMap});
 
+  @override
+  _ChatRoomState createState() => _ChatRoomState();
+}
+
+class _ChatRoomState extends State<ChatRoom> {
   final TextEditingController _message = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
+  final ScrollController _scrollController = ScrollController();
   File? imageFile;
+
+  @override
+  void dispose() {
+    _message.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   Future getImage() async {
     ImagePicker _picker = ImagePicker();
 
-    await _picker.pickImage(source: ImageSource.gallery).then((xFile) {
+    try {
+      final xFile = await _picker.pickImage(source: ImageSource.gallery);
       if (xFile != null) {
         imageFile = File(xFile.path);
         uploadImage();
       }
-    });
+    } catch (e) {
+      print("Error picking image: $e");
+    }
   }
 
   Future uploadImage() async {
-    String fileName = Uuid().v1();
-    int status = 1;
+  String fileName = Uuid().v1();
+  int status = 1;
+
+  await _firestore
+      .collection('chatroom')
+      .doc(widget.chatRoomId)
+      .collection('chats')
+      .doc(fileName)
+      .set({
+    "sendby": _auth.currentUser!.displayName,
+    "message": "",
+    "type": "img",
+    "time": FieldValue.serverTimestamp(),
+  });
+
+  var ref =
+      FirebaseStorage.instance.ref().child('images').child("$fileName.jpg");
+
+  try {
+    var uploadTask = await ref.putFile(imageFile!);
+
+    String imageUrl = await uploadTask.ref.getDownloadURL();
 
     await _firestore
         .collection('chatroom')
-        .doc(chatRoomId)
+        .doc(widget.chatRoomId)
         .collection('chats')
         .doc(fileName)
-        .set({
-      "sendby": _auth.currentUser!.displayName,
-      "message": "",
-      "type": "img",
-      "time": FieldValue.serverTimestamp(),
-    });
+        .update({"message": imageUrl});
 
-    var ref =
-        FirebaseStorage.instance.ref().child('images').child("$fileName.jpg");
-
-    var uploadTask = await ref.putFile(imageFile!).catchError((error) async {
-      await _firestore
-          .collection('chatroom')
-          .doc(chatRoomId)
-          .collection('chats')
-          .doc(fileName)
-          .delete();
-
-      status = 0;
-    });
-
-    if (status == 1) {
-      String imageUrl = await uploadTask.ref.getDownloadURL();
-
-      await _firestore
-          .collection('chatroom')
-          .doc(chatRoomId)
-          .collection('chats')
-          .doc(fileName)
-          .update({"message": imageUrl});
-
-      print(imageUrl);
-    }
+    print(imageUrl);
+  } catch (error) {
+    print("Error uploading image: $error");
+    await _firestore
+        .collection('chatroom')
+        .doc(widget.chatRoomId)
+        .collection('chats')
+        .doc(fileName)
+        .delete();
+    status = 0;
   }
+}
 
   void onSendMessage() async {
     if (_message.text.isNotEmpty) {
@@ -90,7 +104,7 @@ class ChatRoom extends StatelessWidget {
       _message.clear();
       await _firestore
           .collection('chatroom')
-          .doc(chatRoomId)
+          .doc(widget.chatRoomId)
           .collection('chats')
           .add(messages);
     } else {
@@ -135,17 +149,15 @@ class ChatRoom extends StatelessWidget {
         backgroundColor: Colors.white,
         title: StreamBuilder<DocumentSnapshot>(
           stream:
-              _firestore.collection("users").doc(userMap['uid']).snapshots(),
+              _firestore.collection("users").doc(widget.userMap['uid']).snapshots(),
           builder: (context, snapshot) {
-            if (snapshot.data != null) {
+            if (snapshot.hasData) {
               return Container(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      userMap['name'],
-                      // style: TextStyle(
-                      //     color: CustomTheme.pinkthemecolor, fontSize: 25)
+                      widget.userMap['name'],
                     ),
                     Text(
                       snapshot.data!['status'],
@@ -169,14 +181,20 @@ class ChatRoom extends StatelessWidget {
               child: StreamBuilder<QuerySnapshot>(
                 stream: _firestore
                     .collection('chatroom')
-                    .doc(chatRoomId)
+                    .doc(widget.chatRoomId)
                     .collection('chats')
                     .orderBy("time", descending: false)
                     .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.data != null) {
+                  if (snapshot.hasData) {
+                    WidgetsBinding.instance?.addPostFrameCallback((_) {
+                      _scrollController.jumpTo(
+                          _scrollController.position.maxScrollExtent);
+                    });
+
                     return ListView.builder(
+                      controller: _scrollController,
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder: (context, index) {
                         Map<String, dynamic> map = snapshot.data!.docs[index]
@@ -303,5 +321,3 @@ class ShowImage extends StatelessWidget {
     );
   }
 }
-
-//
