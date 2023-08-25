@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
             useMaterial3: true,
             fontFamily: GoogleFonts.poppins().fontFamily),
-        home: SplashScreen(),
+        home: AdminDashboard(),
       ),
     );
   }
