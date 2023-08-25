@@ -1,17 +1,20 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:meetly/Featiure/Authentication/login/login_bloc/login_bloc.dart';
-import 'package:meetly/Featiure/admin/ui/admin_dashboard.dart';
-import 'package:facebook_audience_network/facebook_audience_network.dart';
 import 'package:meetly/Featiure/splash/ui/splash.dart';
 import 'package:meetly/chat_home.dart';
 import 'package:meetly/firebase_options.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  OneSignal.initialize("6d457447-697b-460f-8ebf-e44c8748d188"); 
+  OneSignal.Notifications.requestPermission(false).then((accepted) {print("One Signal Permision $accepted");});
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
