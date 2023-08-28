@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meetly/Featiure/Authentication/login/login_bloc/login_event.dart';
 import 'package:meetly/Featiure/Authentication/login/login_bloc/login_states.dart';
+import 'package:meetly/Featiure/home/ui/pages/homepage.dart';
 import 'package:meetly/chat_home.dart';
 import './../../login_bloc/login_bloc.dart';
 
@@ -109,7 +110,7 @@ class _LoginState extends State<Login> {
           } else if (state is AuthLoggedInState) {
           //  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => ChatHome()), (route) => false);
            return Center(child: TextButton(child: const Text("You logged In, Click here to move forward"), onPressed: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChatHome(),));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage(),));
             },),);
           }
             return SafeArea(

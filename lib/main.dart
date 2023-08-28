@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:meetly/Featiure/Authentication/login/login_bloc/login_bloc.dart';
+import 'package:meetly/Featiure/home/ui/pages/homepage.dart';
 import 'package:meetly/Featiure/splash/ui/splash.dart';
 import 'package:meetly/chat_home.dart';
 import 'package:meetly/firebase_options.dart';
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
             useMaterial3: true,
             fontFamily: GoogleFonts.poppins().fontFamily),
-        home: ChatHome(),
+        home: SplashScreen(),
       ),
     );
   }

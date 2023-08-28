@@ -70,7 +70,7 @@ class _RegisterState extends State<Register> {
                 child: const Text("You logged In. Click here to move forward"),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ChatHome(),
+                    builder: (context) => HomePage(),
                   ));
                 },
               ),
