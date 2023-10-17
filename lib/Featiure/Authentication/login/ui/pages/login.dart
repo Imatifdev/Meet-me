@@ -9,7 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meetly/Featiure/Authentication/login/login_bloc/login_event.dart';
 import 'package:meetly/Featiure/Authentication/login/login_bloc/login_states.dart';
 import 'package:meetly/Featiure/home/ui/pages/homepage.dart';
-import 'package:meetly/chat_home.dart';
+import 'package:meetly/member_chat_home.dart';
 import './../../login_bloc/login_bloc.dart';
 
 import '../../../../../config/theme/colors.dart';
@@ -101,19 +101,25 @@ class _LoginState extends State<Login> {
     final heading = width * 0.07 * textScaleFactor;
 
     return Scaffold(
-      body: BlocBuilder<AuthBloc, AuthState>(
-         builder: (context, state){
-           if (state is AuthLoadingState) {
-            return const CircularProgressIndicator();
-          } else if (state is AuthErrorState) {
-            return Center(child: Text(state.error));
-          } else if (state is AuthLoggedInState) {
+      body: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
+        if (state is AuthLoadingState) {
+          return const CircularProgressIndicator();
+        } else if (state is AuthErrorState) {
+          return Center(child: Text(state.error));
+        } else if (state is AuthLoggedInState) {
           //  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => ChatHome()), (route) => false);
-           return Center(child: TextButton(child: const Text("You logged In, Click here to move forward"), onPressed: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage(),));
-            },),);
-          }
-            return SafeArea(
+          return Center(
+            child: TextButton(
+              child: const Text("You logged In, Click here to move forward"),
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const HomePage(),
+                ));
+              },
+            ),
+          );
+        }
+        return SafeArea(
           child: SingleChildScrollView(
             child: Stack(
               children: [
@@ -139,15 +145,15 @@ class _LoginState extends State<Login> {
                             child: Image.asset(
                               'assets/images/logo.png',
                               height: width / 3,
-                              width: width/3,
+                              width: width / 3,
                             ),
                           ),
                           Text(
                             "Welcome back to Meetly",
                             style: TextStyle(
-                                fontSize: heading-6, fontWeight: FontWeight.bold),
+                                fontSize: heading - 6,
+                                fontWeight: FontWeight.bold),
                           ),
-                          
                         ],
                       ),
                       SizedBox(
@@ -173,49 +179,52 @@ class _LoginState extends State<Login> {
                                 hintText: 'Email*',
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(color: Colors.grey.shade200),
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade200),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(color: Colors.grey.shade200),
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade200),
                                 ),
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Please enter your email';
-                                }
-                                else if( !value.contains("@")){
+                                } else if (!value.contains("@")) {
                                   return "Please enter valid email";
                                 }
                                 return null;
                               },
                             ),
                             SizedBox(
-                        height: height * 0.02,
-                      ),
-                      TextFormField(
-                        controller: _passwordController,
-                        decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          filled: true,
-                          hintText: 'Password*',
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: Colors.grey.shade200),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: Colors.grey.shade200),
-                          ),
-                        ),
-                        obscureText: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                          return null;
-                        },
-                      ),
+                              height: height * 0.02,
+                            ),
+                            TextFormField(
+                              controller: _passwordController,
+                              decoration: InputDecoration(
+                                fillColor: Colors.white,
+                                filled: true,
+                                hintText: 'Password*',
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade200),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade200),
+                                ),
+                              ),
+                              obscureText: true,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your password';
+                                }
+                                return null;
+                              },
+                            ),
                           ],
                         ),
                       ),
@@ -228,25 +237,25 @@ class _LoginState extends State<Login> {
                           child: Text(
                             "Forgot Password?",
                             style: TextStyle(
-                                fontSize: fontsize2-3,
+                                fontSize: fontsize2 - 3,
                                 color: Colors.lightBlue.shade900,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
                       InkWell(
-                        onTap: (){
-                          if(_formKey.currentState!.validate()){
+                        onTap: () {
+                          if (_formKey.currentState!.validate()) {
                             setState(() {
-                            isLoading = true;
-                          });
-                           BlocProvider.of<AuthBloc>(context).add(LoginEvent(
-                        _emailController.text,
-                        _passwordController.text,
-                      ));
-                      setState(() {
-                        isLoading = false;
-                      });
+                              isLoading = true;
+                            });
+                            BlocProvider.of<AuthBloc>(context).add(LoginEvent(
+                              _emailController.text,
+                              _passwordController.text,
+                            ));
+                            setState(() {
+                              isLoading = false;
+                            });
                           }
                         },
                         child: Container(
@@ -256,61 +265,84 @@ class _LoginState extends State<Login> {
                               color: Colors.lightBlue.shade900,
                               borderRadius: BorderRadius.circular(12)),
                           child: Center(
-                            child: 
-                            isLoading? const CircularProgressIndicator(color: Colors.white) :
-                            Text(
-                              "Login",
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: subheading),
-                            ),
+                            child: isLoading
+                                ? const CircularProgressIndicator(
+                                    color: Colors.white)
+                                : Text(
+                                    "Login",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: subheading),
+                                  ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 10,),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       SizedBox(
-                        width: width-90,
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Image.asset("assets/images/google-G.png", height: 40, width: 40,),
-                                const Text("Continue with Google")
-                              ],
+                          width: width - 90,
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Image.asset(
+                                    "assets/images/google-G.png",
+                                    height: 40,
+                                    width: 40,
+                                  ),
+                                  const Text("Continue with Google")
+                                ],
+                              ),
                             ),
-                          ),
-                        )),
-                      const SizedBox(height: 10,),
+                          )),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       SizedBox(
-                        width: width-90,
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Image.asset("assets/images/fb-F.png", height: 40, width: 40,),
-                                const Text("Continue with Facebook")
-                              ],
+                          width: width - 90,
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Image.asset(
+                                    "assets/images/fb-F.png",
+                                    height: 40,
+                                    width: 40,
+                                  ),
+                                  const Text("Continue with Facebook")
+                                ],
+                              ),
                             ),
-                          ),
-                        )),
-                      const SizedBox(height: 10,),
+                          )),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       SizedBox(
-                        width: width-90,
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Image.asset("assets/images/apple.png", height: 40, width: 40,),
-                                const Text("Continue with Apple")
-                              ],
+                          width: width - 90,
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Image.asset(
+                                    "assets/images/apple.png",
+                                    height: 40,
+                                    width: 40,
+                                  ),
+                                  const Text("Continue with Apple")
+                                ],
+                              ),
                             ),
-                          ),
-                        )),
+                          )),
                       RichText(
                         text: TextSpan(
                           children: <TextSpan>[
@@ -320,7 +352,7 @@ class _LoginState extends State<Login> {
                                 color: Colors.lightBlue.shade900,
                                 fontFamily: GoogleFonts.poppins().fontFamily,
                                 fontWeight: FontWeight.bold,
-                                fontSize: fontsize2-2,
+                                fontSize: fontsize2 - 2,
                               ),
                             ),
                             TextSpan(
@@ -329,7 +361,7 @@ class _LoginState extends State<Login> {
                                 color: Colors.lightBlue.shade900,
                                 fontFamily: GoogleFonts.poppins().fontFamily,
                                 fontWeight: FontWeight.bold,
-                                fontSize: fontsize2-2,
+                                fontSize: fontsize2 - 2,
                               ),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
@@ -352,9 +384,7 @@ class _LoginState extends State<Login> {
             ),
           ),
         );
-          }
-         
-      ),
+      }),
     );
   }
 }

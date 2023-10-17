@@ -1,18 +1,21 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:meetly/showgroups.dart';
 
 import 'chat_room.dart';
+import 'creategroup.dart';
 
-class ChatHome extends StatefulWidget {
-  const ChatHome({super.key});
+class CareTeamChatHomeWidget extends StatefulWidget {
+  const CareTeamChatHomeWidget({super.key});
 
   @override
-  ChatHomeState createState() => ChatHomeState();
+  CareTeamChatHomeWidgetState createState() => CareTeamChatHomeWidgetState();
 }
 
-class ChatHomeState extends State<ChatHome> {
+class CareTeamChatHomeWidgetState extends State<CareTeamChatHomeWidget> {
   Map<String, dynamic>? userMap;
   bool isLoading = false;
   final TextEditingController _search = TextEditingController();
@@ -104,6 +107,24 @@ class ChatHomeState extends State<ChatHome> {
     }
   }
 
+  void createGroup() {
+    // Navigate to the GroupCreateScreen
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => GroupCreateScreen(allUsers: allUsers),
+      ),
+    );
+  }
+
+  void showgroups() {
+    // Navigate to the GroupCreateScreen
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => GroupListScreen(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -117,6 +138,14 @@ class ChatHomeState extends State<ChatHome> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: size.height / 20),
+                  ElevatedButton(
+                    onPressed: createGroup,
+                    child: Text("Create Group"),
+                  ),
+                  ElevatedButton(
+                    onPressed: showgroups,
+                    child: Text("show Group"),
+                  ),
                   Container(
                     height: size.height / 14,
                     width: size.width,
@@ -195,64 +224,80 @@ class ChatHomeState extends State<ChatHome> {
                       : const Center(
                           child: Text("User not found"),
                         ),
-                  ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: allUsers.length,
-                    itemBuilder: (context, index) {
-                      Map<String, dynamic> userData = allUsers[index];
-                      return ListTile(
-                        onTap: () {
-                          String roomId = chatRoomId(
-                            _auth.currentUser!.displayName!,
-                            userData['name'],
-                          );
+                  SizedBox(
+                    height: 500,
+                    child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: allUsers.length,
+                      itemBuilder: (context, index) {
+                        Map<String, dynamic> userData = allUsers[index];
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border:
+                                    Border.all(width: 1, color: Colors.grey)),
+                            child: ListTile(
+                              onTap: () {
+                                String roomId = chatRoomId(
+                                  _auth.currentUser!.uid!,
+                                  userData['uid'],
+                                );
 
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => ChatRoom(
-                                chatRoomId: roomId,
-                                userMap: userData,
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => ChatRoom(
+                                      chatRoomId: roomId,
+                                      userMap: userData,
+                                    ),
+                                  ),
+                                );
+                              },
+                              leading: Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade200,
+                                  borderRadius: BorderRadius.circular(100),
+                                  border: Border.all(width: 1),
+                                ),
+                                child: CircleAvatar(
+                                  backgroundColor: Colors
+                                      .blue, // Change the background color as desired
+                                  child: Text(
+                                    userData['name'][
+                                        0], // Display the first character of the user's name
+                                    style: TextStyle(
+                                      color: Colors
+                                          .white, // Change the text color as desired
+                                      fontSize:
+                                          24, // Adjust the font size as desired
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              title: Text(
+                                userData['name'],
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              subtitle: Text(userData['email']),
+                              trailing: const Icon(
+                                CupertinoIcons.right_chevron,
+                                color: Colors.black,
                               ),
                             ),
-                          );
-                        },
-                        leading: Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
-                            borderRadius: BorderRadius.circular(100),
-                            border: Border.all(width: 1),
                           ),
-                          child: userData.containsKey('profilePictureURL')
-                              ? CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                    userData['profilePictureURL'],
-                                  ),
-                                )
-                              : const Icon(
-                                  Icons.person,
-                                  color: Colors.black,
-                                ),
-                        ),
-                        title: Text(
-                          userData['name'],
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        subtitle: Text(userData['email']),
-                        trailing: const Icon(
-                          Icons.mobile_friendly,
-                          color: Colors.black,
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                 ],
-              ));      
-}}
-
+              ));
+  }
+}

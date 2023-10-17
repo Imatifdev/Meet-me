@@ -37,18 +37,14 @@ dependencies:
   flutter:
     sdk: flutter
   
-  flutter_facebook_auth: ^6.0.1
   get: ^4.6.5
   google_fonts: ^5.1.0
-  google_mobile_ads: ^3.0.0
   google_sign_in: ^6.1.4
   image_picker: ^1.0.2
+  intl: ^0.18.1
   lottie: ^2.6.0
   uuid: ^3.0.7
-  facebook_audience_network: ^1.0.1
-  onesignal_flutter: ^5.0.0
-  fluttertoast: ^8.2.2
-
+  
 dev_dependencies:
   bloc: ^8.1.2
   flutter_bloc: ^8.1.3
